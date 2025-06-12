@@ -17,6 +17,7 @@ export const Card = ({ project, onMoveProject }) => {
     const subtaskSummary = '0/0';
 
     const handleMoveClick = (e) => {
+        // This stops the click from also opening the detail modal
         e.stopPropagation(); 
         onMoveProject({ projectId: project.id, newStatus: 'In Progress' });
     };
@@ -52,6 +53,7 @@ export const Card = ({ project, onMoveProject }) => {
             </div>
             <ProgressBar progress={progress} />
 
+            {/* This button only appears on cards in the "To Do" column */}
             {project.status === 'To Do' && (
                 <div className="border-t border-gray-200 mt-4 pt-3">
                     <Button

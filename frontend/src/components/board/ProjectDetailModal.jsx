@@ -2,10 +2,9 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useUiStore } from '../../store/uiStore';
 import apiClient from '../../api';
-import { ProgressBar } from './ProgressBar'; // Reuse the progress bar
+import { ProgressBar } from '../common/ProgressBar';
 import { Calendar, User, Flag, Info } from 'lucide-react';
 
-// This function fetches data from the new endpoint we just created
 const fetchProjectById = async (projectId) => {
   if (!projectId) return null;
   const { data } = await apiClient.get(`/projects/${projectId}`);
@@ -14,11 +13,11 @@ const fetchProjectById = async (projectId) => {
 
 export const ProjectDetailModal = () => {
   const { isProjectDetailModalOpen, closeProjectDetailModal, viewingProjectId } = useUiStore();
-
+  
   const { data: project, isLoading, isError } = useQuery({
     queryKey: ['project', viewingProjectId],
     queryFn: () => fetchProjectById(viewingProjectId),
-    enabled: !!viewingProjectId, // Only run the query if there is a projectId
+    enabled: !!viewingProjectId,
   });
 
   if (!isProjectDetailModalOpen) return null;
@@ -32,19 +31,16 @@ export const ProjectDetailModal = () => {
           <>
             <h2 className="text-3xl font-bold mb-2">{project.title}</h2>
             <p className="text-gray-600 mb-6">{project.description}</p>
-
             <div className="flex flex-wrap items-center text-sm text-gray-500 mb-6 gap-x-6 gap-y-2">
                 <span className="flex items-center"><User size={16} className="mr-2" /> Lead: <span className="font-semibold ml-1">{project.lead_name || 'N/A'}</span></span>
                 <span className="flex items-center"><Calendar size={16} className="mr-2" /> Due: <span className="font-semibold ml-1">{project.due_date || 'N/A'}</span></span>
                 <span className="flex items-center"><Info size={16} className="mr-2" /> Status: <span className="font-semibold ml-1">{project.status}</span></span>
                 <span className="flex items-center"><Flag size={16} className="mr-2" /> Impact: <span className="font-semibold ml-1">{project.priority}</span></span>
             </div>
-
             <div className="mb-6">
                 <h4 className="text-lg font-medium mb-2">Overall Progress</h4>
                 <ProgressBar progress={project.progress || 0} />
             </div>
-
             <div className="flex justify-end mt-8">
               <button onClick={closeProjectDetailModal} className="px-6 py-2 bg-gray-200 font-semibold rounded-lg">Close</button>
             </div>

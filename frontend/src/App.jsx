@@ -6,6 +6,7 @@ import { ProjectMarathon } from './components/ProjectMarathon';
 import { TeamOverview } from './components/TeamOverview';
 import { MeetingNotes } from './components/MeetingNotes';
 import { NewProjectModal } from './components/board/NewProjectModal';
+import { ProjectDetailModal } from './components/board/ProjectDetailModal';
 
 function App() {
   const [activeTab, setActiveTab] = useState('projectMarathon');
@@ -34,7 +35,9 @@ function App() {
       <main className="flex-1 p-4 md:p-6 lg:p-8">
         {renderActiveTab()}
       </main>
+
       <NewProjectModal />
+      <ProjectDetailModal />
     </div>
   );
 }

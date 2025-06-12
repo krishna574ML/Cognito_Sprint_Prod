@@ -30,7 +30,7 @@ export const ProjectMarathon = () => {
     const statuses = ["To Do", "In Progress", "Blocked", "In Review", "Done"];
 
     if (isLoading) return <div>Loading projects...</div>;
-    if (isError) return <div>Error fetching projects.</div>;
+    if (isError) return <div>Error fetching projects. Make sure the backend is running.</div>;
 
     const projectsByColumn = statuses.reduce((acc, status) => {
         acc[status] = projects.filter(p => p.status === status);

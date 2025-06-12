@@ -25,9 +25,9 @@ def create_app(config_class=Config):
     CORS(app)
 
     with app.app_context():
-        # This line is now corrected to import the original models
+        # Correctly import the original models
         from .models import user, project, task
-        
+
         from .api.auth_routes import auth_bp
         from .api.project_routes import project_bp
         from .api.task_routes import task_bp
