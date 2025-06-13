@@ -1,6 +1,15 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
+from ..services import auth_service
 
-# This line defines the 'auth_bp' variable that your app is looking for.
+# The url_prefix ('/api/auth') is now handled in __init__.py
 auth_bp = Blueprint('auth_bp', __name__)
 
-# Routes for login, register, etc. will be added here later.
+@auth_bp.route('/register', methods=['POST'])
+def register_user():
+    data = request.get_json()
+    return auth_service.register_user_service(data)
+
+@auth_bp.route('/login', methods=['POST'])
+def login_user():
+    data = request.get_json()
+    return auth_service.login_user_service(data)

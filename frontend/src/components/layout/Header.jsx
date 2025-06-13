@@ -1,20 +1,38 @@
 import React from 'react';
-import { Button } from '../common/Button';
-import { Plus } from 'lucide-react';
-import { Avatar } from '../common/Avatar';
-import { useUiStore } from '../../store/uiStore'; // Import the store
+import { useAuthStore } from '../../store/authStore';
+import { useUiStore } from '../../store/uiStore';
+// Corrected import: 'Avatar' is a default export, so it should not have curly braces.
+import Avatar from '../common/Avatar';
 
-export const Header = () => {
-  const openNewProjectModal = useUiStore((state) => state.openNewProjectModal); // Get the action
+const Header = () => {
+  const { user, logout } = useAuthStore();
+  const { openNewProjectModal } = useUiStore();
 
   return (
-    <header className="bg-white shadow-lg p-4 flex justify-between items-center border-b border-gray-200">
-        <h1 className="text-3xl font-extrabold text-blue-600">Marathon 🏃</h1>
-        <div className="flex items-center space-x-4">
-            {/* Add the onClick handler */}
-            <Button onClick={openNewProjectModal} icon={Plus} variant="primary">New</Button>
-            <Avatar name="Cognito User" color="bg-indigo-500" />
-        </div>
+    <header className="bg-white shadow-md p-4 flex justify-between items-center">
+      <h1 className="text-xl font-bold text-gray-800">Cognito Sprint Kanban</h1>
+      <div className="flex items-center gap-4">
+        <button
+          onClick={openNewProjectModal}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+        >
+          + New Project
+        </button>
+        {user && (
+          <div className="flex items-center gap-3">
+            <Avatar userId={user.id} />
+            <span className="font-semibold">{user.username}</span>
+            <button
+              onClick={logout}
+              className="text-sm text-gray-600 hover:text-blue-600 font-semibold"
+            >
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
     </header>
   );
 };
+
+export default Header;

@@ -8,8 +8,13 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     role = db.Column(db.String(50), nullable=False, default='regular')
 
-    led_projects = db.relationship('Project', back_populates='lead', lazy='dynamic')
+    # Use back_populates to link to the 'lead' relationship on the Project model.
+    led_projects = db.relationship('Project', foreign_keys='Project.lead_id', back_populates='lead')
+    
     tasks = db.relationship('Task', back_populates='assignee', lazy='dynamic')
+
+    # Use back_populates to link to the 'members' relationship on the Project model.
+    assigned_projects = db.relationship('Project', secondary='project_members', back_populates='members')
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')

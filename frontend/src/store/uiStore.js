@@ -1,14 +1,16 @@
 import { create } from 'zustand';
 
+// This file manages the state of UI components, like modals.
 export const useUiStore = create((set) => ({
-  // --- New Project Modal (Existing) ---
+  // State for the "New Project" modal
   isNewProjectModalOpen: false,
   openNewProjectModal: () => set({ isNewProjectModalOpen: true }),
   closeNewProjectModal: () => set({ isNewProjectModalOpen: false }),
 
-  // --- Project Detail Modal (Add these new lines) ---
+  // State for the "Project Detail" modal
   isProjectDetailModalOpen: false,
-  viewingProjectId: null,
-  openProjectDetailModal: (projectId) => set({ isProjectDetailModalOpen: true, viewingProjectId: projectId }),
-  closeProjectDetailModal: () => set({ isProjectDetailModalOpen: false, viewingProjectId: null }),
+  selectedProject: null,
+  openProjectDetailModal: () => set({ isProjectDetailModalOpen: true }),
+  closeProjectDetailModal: () => set({ isProjectDetailModalOpen: false }),
+  setSelectedProject: (project) => set({ selectedProject: project }),
 }));

@@ -1,15 +1,16 @@
 import React from 'react';
 
-export function ProgressBar({ progress }) {
-  const style = {
-    width: `${progress}%`
-  };
+const ProgressBar = ({ percentage }) => {
+  const safePercentage = Math.min(100, Math.max(0, percentage));
+
   return (
-    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+    <div className="w-full bg-gray-200 rounded-full h-2.5">
       <div
-        className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-out"
-        style={style}
+        className="bg-blue-600 h-2.5 rounded-full"
+        style={{ width: `${safePercentage}%` }}
       ></div>
     </div>
   );
-}
+};
+
+export default ProgressBar;
