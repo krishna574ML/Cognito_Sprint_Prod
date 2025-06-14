@@ -35,3 +35,4 @@ export const apiRegister = (userData) => apiRequest(`${API_URL}/auth/register`, 
 export const fetchProjects = () => apiRequest(`${API_URL}/projects`, 'GET');
 export const createProject = (projectData) => apiRequest(`${API_URL}/projects`, 'POST', projectData);
 export const deleteProject = (projectId) => apiRequest(`${API_URL}/projects/${projectId}`, 'DELETE');
+export const updateProject = (projectId, data) => apiRequest(`${API_URL}/projects/${projectId}`, 'PUT', data);
