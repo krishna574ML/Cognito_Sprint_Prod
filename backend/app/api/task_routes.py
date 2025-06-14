@@ -7,21 +7,21 @@ from ..models.user import User
 from ..schemas.task_schema import TaskSchema
 from ..services.activity_service import log_activity
 
-# The url_prefix ('/api') is handled in __init__.py
 task_bp = Blueprint('task_bp', __name__)
 task_schema = TaskSchema()
 tasks_schema = TaskSchema(many=True)
 
 def verify_project_member(project_id, user_id):
     project = Project.query.get_or_404(project_id)
-    if not any(member.id == user_id for member in project.members):
+    # Ensure user_id is an integer for comparison
+    if not any(member.id == int(user_id) for member in project.members):
         return None, jsonify({'error': 'Unauthorized'}), 403
     return project, None, None
 
 @task_bp.route('/projects/<int:project_id>/tasks', methods=['POST'])
 @jwt_required()
 def add_task_to_project(project_id):
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     project, error, code = verify_project_member(project_id, current_user_id)
     if error: return error, code
 
@@ -46,7 +46,7 @@ def get_project_tasks(project_id):
 @task_bp.route('/tasks/<int:task_id>', methods=['PUT'])
 @jwt_required()
 def update_task(task_id):
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     user = User.query.get(current_user_id)
     task = Task.query.get_or_404(task_id)
     _, error, code = verify_project_member(task.project_id, current_user_id)
@@ -73,7 +73,7 @@ def update_task(task_id):
 @task_bp.route('/tasks/<int:task_id>', methods=['DELETE'])
 @jwt_required()
 def delete_task(task_id):
-    current_user_id = get_jwt_identity()
+    current_user_id = int(get_jwt_identity())
     user = User.query.get(current_user_id)
     task = Task.query.get_or_404(task_id)
     _, error, code = verify_project_member(task.project_id, current_user_id)

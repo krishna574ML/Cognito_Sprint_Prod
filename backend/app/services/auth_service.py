@@ -32,11 +32,10 @@ def login_user_service(data):
     if not username or not password:
         return jsonify({'error': 'Missing username or password'}), 400
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter(User.username.ilike(username)).first()
 
     if user and user.check_password(password):
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
         return jsonify(access_token=access_token, user=user_schema.dump(user))
     
     return jsonify({'error': 'Invalid credentials'}), 401
-

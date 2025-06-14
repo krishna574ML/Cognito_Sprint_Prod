@@ -1,12 +1,10 @@
 import os
-from dotenv import load_dotenv
 
-# This line loads the variables from your .env file
-load_dotenv()
+basedir = os.path.abspath(os.path.dirname(__file__))
+instance_path = os.path.join(basedir, 'instance')
+os.makedirs(instance_path, exist_ok=True)
 
-# The class MUST be named 'Config' with an uppercase 'C'
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'a-very-secret-key-that-you-should-change')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(instance_path, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = os.environ.get('SECRET_KEY')

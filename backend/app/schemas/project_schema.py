@@ -1,15 +1,11 @@
 from app import ma
 from ..models.project import Project
-from .task_schema import TaskSchema
-# Import UserSchema at the top
-from .user_schema import UserSchema
 
 class ProjectSchema(ma.SQLAlchemyAutoSchema):
-    tasks = ma.Nested(TaskSchema, many=True, dump_only=True)
+    tasks = ma.Nested('TaskSchema', many=True, dump_only=True)
+    lead = ma.Nested('UserSchema', dump_only=True)
+    members = ma.Nested('UserSchema', many=True, dump_only=True)
     progress = ma.Method(serialize="get_progress")
-    # Add fields for the project lead and members
-    lead = ma.Nested(UserSchema, dump_only=True)
-    members = ma.Nested(UserSchema, many=True, dump_only=True)
 
     class Meta:
         model = Project
@@ -17,16 +13,12 @@ class ProjectSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
 
     def get_progress(self, obj):
-        tasks_collection = obj.tasks
-        if not tasks_collection:
+        try:
+            all_tasks = obj.tasks
+            if not all_tasks: return 0
+            total_tasks = len(all_tasks)
+            if total_tasks == 0: return 0
+            completed_tasks = len([task for task in all_tasks if task.completed])
+            return round((completed_tasks / total_tasks) * 100)
+        except Exception:
             return 0
-        
-        all_tasks = tasks_collection.all()
-        if not all_tasks:
-            return 0
-            
-        completed_tasks = [task for task in all_tasks if task.completed]
-        if not completed_tasks:
-            return 0
-            
-        return round((len(completed_tasks) / len(all_tasks)) * 100)
